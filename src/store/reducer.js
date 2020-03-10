@@ -1,6 +1,7 @@
 const initialState = {
   user: {
-    name: "Helva"
+    name: "Helva",
+    favorites: [67283, 357311]
   },
   pizzas: [
     {
@@ -28,12 +29,42 @@ const initialState = {
 };
 
 function reducer(state = initialState, action) {
+  console.log("ACTION?", action);
   switch (action.type) {
     case "ADD_PIZZA":
       return {
         ...state,
         pizzas: [...state.pizzas, { ...action.payload, bought: 0 }]
       };
+
+    case "TOGGLE_FAVORITE_PIZZA":
+      // current favorites
+      console.log("Favs", state.user.favorites);
+      // pizza id that needs to be toggled
+      console.log("ADDED OR TAKEN AWAY", action.payload);
+
+      let newFavorites;
+      // pizza is already in favorites -> take it out
+      // pizza is not favorites -> we need to put it in
+
+      if (state.user.favorites.includes(action.payload)) {
+        // console.log("TAKE IT OUT");
+        newFavorites = state.user.favorites.filter(
+          favorite => favorite !== action.payload
+        );
+      } else {
+        // console.log("PUT IT IN");
+        newFavorites = [...state.user.favorites, action.payload];
+      }
+
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          favorites: newFavorites
+        }
+      };
+
     default:
       return state;
   }
